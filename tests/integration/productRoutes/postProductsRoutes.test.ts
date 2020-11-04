@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from '../../../src/routes/productRoutes/http/node_modules/uuid';
 import { UNPROCESSABLE_ENTITY } from 'http-status';
 import { app } from '../../../src/app';
 import { knex } from "../../../src/util/knex";
