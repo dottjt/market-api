@@ -1,0 +1,34 @@
+version: '3.1'
+services:
+  refactor-me-dev:
+    container_name: refactor-me-dev
+    build:
+      context: ../../
+      dockerfile: ./deployment/development/Dockerfile.development
+    ports:
+      - 4000:4000
+    env_file:
+      - ../../environment/.env
+    depends_on:
+      - refactor-me-postgres-dev
+    networks:
+      - refactor-me-network-dev
+    volumes:
+      - ../../src:/app/src
+      - ../../node_modules:/app/node_modules
+
+  refactor-me-postgres-dev:
+    image: postgres:alpine
+    container_name: refactor-me-postgres-dev
+    ports:
+      - 5432:5432
+    restart: always
+    env_file:
+      - ../../environment/.env
+      - ../../environment/.env.development
+    networks:
+      - refactor-me-network-dev
+
+networks:
+  refactor-me-network-dev:
+    driver: bridge

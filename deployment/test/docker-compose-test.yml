@@ -1,0 +1,34 @@
+version: '3.1'
+services:
+  refactor-me-test:
+    container_name: refactor-me-test
+    build:
+      context: ../../
+      dockerfile: ./deployment/test/Dockerfile.test
+    ports:
+      - 4000:4000
+    env_file:
+      - ../../environment/.env
+    depends_on:
+      - refactor-me-postgres-test
+    networks:
+      - refactor-me-network-test
+    volumes:
+      - ../../tests:/app/tests
+      - ../../src:/app/src
+
+  refactor-me-postgres-test:
+    image: postgres:alpine
+    container_name: refactor-me-postgres-test
+    ports:
+      - 5432:5432
+    restart: always
+    env_file:
+      - ../../environment/.env
+      - ../../environment/.env.test
+    networks:
+      - refactor-me-network-test
+
+networks:
+  refactor-me-network-test:
+    driver: bridge

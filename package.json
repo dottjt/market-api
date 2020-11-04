@@ -1,0 +1,70 @@
+{
+  "name": "market-api",
+  "version": "1.0.0",
+  "description": "Another poorly rewritten products API in node.js",
+  "main": "src/index.ts",
+  "scripts": {
+    "-- -- -- -- START SCRIPTS -- -- -- -- ": "--",
+    "start:docker:dev": "npm run docker:dev",
+    "start:docker:test": "npm run docker:test",
+    "-- -- -- -- DATABASE SCRIPTS DEV -- -- -- -- ": "--",
+    "knex:reset:dev": "npm run knex:rollback:dev && npm run knex:migrate:dev && npm run knex:seed:dev",
+    "knex:rollback:dev": "NODE_ENV=development npx knex --knexfile ./database/knexfile.ts migrate:rollback --all",
+    "knex:migrate:dev": "NODE_ENV=development npx knex --knexfile ./database/knexfile.ts migrate:latest",
+    "knex:seed:dev": "NODE_ENV=development npx knex --knexfile ./database/knexfile.ts seed:run",
+    "-- -- -- -- DATABASE SCRIPTS TEST -- -- -- -- ": "--",
+    "knex:reset:test": "npm run knex:rollback:test && npm run knex:migrate:test && npm run knex:seed:test",
+    "knex:rollback:test": "NODE_ENV=test npx knex --knexfile ./database/knexfile.ts migrate:rollback --all",
+    "knex:migrate:test": "NODE_ENV=test npx knex --knexfile ./database/knexfile.ts migrate:latest",
+    "knex:seed:test": "NODE_ENV=test npx knex --knexfile ./database/knexfile.ts seed:run",
+    "-- -- -- -- DOCKER SCRIPTS -- -- -- -- ": "--",
+    "docker:dev": "npm run docker:build:dev && npm run docker:up:dev",
+    "docker:up:dev": "docker-compose -f ./deployment/development/docker-compose-development.yml up",
+    "docker:build:dev": "docker-compose -f ./deployment/development/docker-compose-development.yml build --no-cache",
+    "docker:test": "npm run docker:build:test && npm run docker:up:test && docker:down:test",
+    "docker:up:test": "docker-compose -f ./deployment/test/docker-compose-test.yml up",
+    "docker:build:test": "docker-compose -f ./deployment/test/docker-compose-test.yml build --no-cache",
+    "docker:down:test": "docker-compose -f ./deployment/test/docker-compose-test.yml down",
+    "-- -- -- -- DOCKER CMD SCRIPTS -- -- -- -- ": "--",
+    "start:dev": "npm run knex:reset:dev && NODE_ENV=development npx ts-node-dev ./src/index.ts --respawn --transpileOnly",
+    "start:test": "npm run knex:reset:test && NODE_ENV=test npx jest --watchAll --maxWorkers=1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^9.4.0",
+    "@types/koa": "^2.11.4",
+    "@types/node": "^14.6.0",
+    "dotenv": "^8.2.0",
+    "dotenv-flow": "^3.2.0",
+    "http-status": "^1.4.2",
+    "joi": "^17.2.1",
+    "knex": "^0.21.5",
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-helmet": "^5.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-ratelimit": "^4.2.1",
+    "pg": "^8.3.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^4.0.2",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "@typescript-eslint/eslint-plugin": "^3.9.1",
+    "@typescript-eslint/parser": "^3.9.1",
+    "eslint": "^7.7.0",
+    "husky": "^4.2.5",
+    "jest": "^26.4.1",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.2.0",
+    "ts-node-dev": "^1.0.0-pre.59"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx eslint . --ext .ts && npm run test"
+    }
+  }
+}
